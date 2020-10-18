@@ -1,2 +1,2 @@
-web: daphne videostreamproject.asgi:application --port $PORT 0.0.0.0 -v2
+web: daphne videostreamproject.asgi:application --port $PORT
 worker: python manage.py runworker -v2
