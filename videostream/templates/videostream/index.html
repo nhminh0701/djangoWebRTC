@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <script>
+        const ROOM_ID = '{{ roomId }}';
+    </script>
+    <link rel="stylesheet" href="{% static 'videostream/css/style.css' %}">
+    <title>Room</title>
+</head>
+<body>
+    <!-- <div id="video-grid"></div> -->
+
+    <div>
+        <input type="text" id="loginInput">
+        <button id="loginBtn">Login</button>
+    </div>
+
+    <div>
+        <input type="text" id="otherUsernameInput">
+        <button id="connectToOtherUsernameBtn">Establish connection</button>
+    </div>
+
+    <div>
+        <input type="text" id="msgInput">
+        <button id="sendMsgBtn">Send text message</button>
+    </div>
+
+
+    <script src="{% static 'videostream/js/index.js' %}"></script>
+</body>
+</html>
