@@ -3,5 +3,9 @@ from videostream import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('<roomId>/', views.room, name='room'),
+    path('chat/<roomId>/', views.chat_room, name='chat-room'),
+    path('video-stream/', 
+        views.video_call, name='video-call'),
+    path('video-stream/<roomId>/', 
+        views.video_call_room, name='video-call-room'),
 ]

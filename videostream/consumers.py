@@ -3,18 +3,11 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 import uuid
 
-class VideoStreamConsumer(WebsocketConsumer):
+class ChatStreamConsumer(WebsocketConsumer):
     def connect(self):
         self.accept()
         
 
-    # def disconnect(self, close_code):
-    #     async_to_sync(self.channel_layer.group_discard)(
-    #         self.room_group_name,
-    #         self.channel_name
-    #     )
-
-    
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
         msg_type = text_data_json['type']
@@ -39,6 +32,7 @@ class VideoStreamConsumer(WebsocketConsumer):
                     'text_data_json': text_data_json
                 }
             )
+
 
     def handle_msg(self, event):
         sender_channel = event['channel_name']

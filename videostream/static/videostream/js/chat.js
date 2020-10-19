@@ -1,6 +1,10 @@
 var protocolScheme = window.location.protocol === 'http:' ? 'ws' : 'wss';
-var connection = new WebSocket(`${protocolScheme}://${window.location.host}/ws/videostream/${ROOM_ID}/`)
+var connection = new WebSocket(`${protocolScheme}://${window.location.host}/ws/chat/${ROOM_ID}/`)
 var name = "";
+
+var stream;
+var localVideo = document.querySelector('#localVideo');
+var remoteVideo = document.querySelector('#remoteVideo');
 
 var loginInput = document.querySelector('#loginInput');
 var loginBtn = document.querySelector('#loginBtn');
@@ -66,29 +70,55 @@ function onLogin(success) {
     if (success === false) {
         alert("Oops...try a different username");
     } else {
-        // Creating our RTCPeerConnection object
 
-        var configuration = {
-            "iceServers": [{ "url": "stun:stun.1.google.com:19302" }]
-        };
+        //************************** */
+        // Starting a peer connection
+        //************************** */
 
-        myConnection = new webkitRTCPeerConnection(configuration);
-        console.log("RTCPeerConnection object was create");
-        console.log(myConnection);
-        myConnection.ondatachannel = handleChannelCallback;
+        navigator.webkitGetUserMedia({
+            video: true, audio: true,
+        }, function (myStream) {
+            stream = myStream;
 
-        // Setup ice handling
-        // When the browser finds an ice candidate we send it to another peer
-        myConnection.onicecandidate = function (event) {
-            if (event.candidate) {
-                send({
-                    type: 'candidate',
-                    candidate: event.candidate
-                });
+            // Display local video stream on the page
+            localVideo.srcObject = stream;
+
+            // Creating our RTCPeerConnection object
+            var configuration = {
+                "iceServers": [{ "url": "stun:stun.1.google.com:19302" }]
+            };
+
+            myConnection = new webkitRTCPeerConnection(configuration);
+            console.log("RTCPeerConnection object was create");
+
+            // Setup stream listening
+            myConnection.addStream(stream);
+
+            // When a remote user adds stream to the peer connection, we display it
+            myConnection.onaddstream = function (e) {
+                remoteVideo.srcObject = e.stream;
             }
-        };
 
-        openDataChannel();
+            console.log(myConnection);
+
+            // Setup DataChannel
+            myConnection.ondatachannel = handleChannelCallback;
+
+            // Setup ice handling
+            // When the browser finds an ice candidate we send it to another peer
+            myConnection.onicecandidate = function (event) {
+                if (event.candidate) {
+                    send({
+                        type: 'candidate',
+                        candidate: event.candidate
+                    });
+                }
+            };
+
+            openDataChannel();
+        }, function (err) {
+            console.log(err);
+        })
     }
 };
 
@@ -112,7 +142,7 @@ function send(message) {
 connectToOtherUsernameBtn.addEventListener("click", function () {
     var otherUsername = otherUsernameInput.value;
     connectedUser = otherUsername;
-
+    console.log("Connect to other user");
     if (otherUsername.length > 0) {
         // Make an offer
         myConnection.createOffer(function (offer) {
@@ -156,6 +186,7 @@ function onAnswer(answer) {
 // When we got ice candidate from another user
 function onCandidate(candidate) {
     myConnection.addIceCandidate(new RTCIceCandidate(candidate));
+    console.log("Added candidate");
 }
 
 // Create data channel

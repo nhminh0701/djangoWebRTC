@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <script>
+        const ROOM_ID = '{{ roomId }}';
+    </script>
+    <link rel="stylesheet" href="{% static 'videostream/css/style.css' %}">
+    <title>Room</title>
+
+    <style>
+        body {
+            background: #eee;
+            padding: 5% 0;
+        }
+
+        video {
+            background: black;
+            border: 1px solid gray;
+        }
+
+        .call-page {
+            position: relative;
+            display: block;
+            margin: 0 auto;
+            width: 500px;
+            height: 500px;
+        }
+
+        #localVideo {
+            width: 150px;
+            height: 150px;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+
+        #remoteVideo {
+            width: 500px;
+            height: 500px;
+        }
+    </style>
+</head>
+<body>
+    <!-- <div id="video-grid"></div> -->
+
+    <div>
+        <input type="text" id="loginInput">
+        <button id="loginBtn">Login</button>
+    </div>
+
+    <div>
+        <input type="text" id="otherUsernameInput">
+        <button id="connectToOtherUsernameBtn">Establish connection</button>
+    </div>
+
+    <div>
+        <input type="text" id="msgInput">
+        <button id="sendMsgBtn">Send text message</button>
+    </div>
+
+
+    <div id="callPage" class="call-page">
+        <video id="remoteVideo" autoplay></video>
+        <video id="localVideo" autoplay></video>
+    </div>
+
+
+    <script src="{% static 'videostream/js/chat.js' %}"></script>
+</body>
+</html>
